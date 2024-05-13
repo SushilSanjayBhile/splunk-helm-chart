@@ -45,22 +45,16 @@ Specify each parameter using the --set key=value[,key=value] argument to helm in
 Accessing Splunk
 Once the Splunk deployment is successful, you can access the Splunk web interface using the following steps:
 
-Find the service IP address:
+Find the nodes external IP address, make sure 30800 node-port is open to http requests:
 bash
-Copy code
-kubectl get svc splunk
-Open a web browser and navigate to http://<service-ip>:8000.
+kubectl get nodes -owide
+Open a web browser and navigate to http://<node-ip>:30800/
 
 Log in using the default credentials:
 
 Username: admin
-Password: The password specified in the splunkPassword parameter.
-License
-This project is licensed under the MIT License.
+Password: The password specified in the SPLUNK_PASSWORD parameter in values.yaml file.
 ```
-## License
-
-Feel free to adjust the content based on your specific requirements and configurations for your Splunk deployment.
 
 
 ## Authors
