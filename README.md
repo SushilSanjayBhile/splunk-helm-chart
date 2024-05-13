@@ -2,69 +2,27 @@
 
 This Helm chart is designed to deploy Splunk in a Kubernetes environment. It provides configurations to customize the deployment according to your needs.
 
-## Prerequisites
+## References
 
-Before deploying this Helm chart, ensure the following prerequisites are met:
+Docker image used from dockerhub splunk/splunk repository:
+https://hub.docker.com/layers/splunk/splunk/9.1.3-patch1/images/sha256-12985957c5095e0440b286ec08df2c6a4315599c69c55c202f44fe7d8aa120ca?context=explore
 
-- Kubernetes cluster is up and running.
-- Helm is installed and configured on your Kubernetes cluster.
-- Access to the Splunk Enterprise Docker image. You can obtain it from the official Splunk website or Docker Hub.
+Docker deployment reference:
+https://docs.splunk.com/Documentation/Splunk/9.2.1/Installation/DeployandrunSplunkEnterpriseinsideDockercontainers
 
-## Installation
+## Installation of docker container
 
 To install the Splunk Helm chart, run the following command:
 
 ```bash
-helm install splunk ./splunk-custom-chart
-Replace ./splunk-custom-chart with the path to the directory containing the Helm chart.
-
-Configuration
-The following table lists the configurable parameters of the Splunk Helm chart and their default values:
-
-Parameter	Description	Default
-image.repository	Splunk Enterprise Docker image repository	splunk/splunk
-image.tag	Splunk Enterprise Docker image tag	latest
-image.pullPolicy	Image pull policy	IfNotPresent
-splunkPassword	Admin password for Splunk	changeme
-splunkLicenseMaster	URL for Splunk Enterprise license master	nil
-splunkIndexerReplicas	Number of indexer replicas	1
-splunkSearchHeadReplicas	Number of search head replicas	1
-persistence.enabled	Enable persistence for Splunk data	true
-persistence.storageClassName	Storage class for persistent volume	standard
-persistence.accessMode	Access mode for persistent volume	ReadWriteOnce
-persistence.size	Size of persistent volume	10Gi
-resources	CPU/Memory resource requests/limits	{}
-service.type	Kubernetes service type	ClusterIP
-service.port	Service port for accessing Splunk	8000
-ingress.enabled	Enable ingress for accessing Splunk	false
-ingress.annotations	Ingress annotations	{}
-ingress.hosts	Ingress hosts	[]
-ingress.tls	Ingress TLS configuration	[]
-Specify each parameter using the --set key=value[,key=value] argument to helm install, or provide a custom values.yaml file.
-
-Accessing Splunk
-Once the Splunk deployment is successful, you can access the Splunk web interface using the following steps:
-
-Find the service IP address:
-bash
-Copy code
-kubectl get svc splunk
-Open a web browser and navigate to http://<service-ip>:8000.
-
-Log in using the default credentials:
-
-Username: admin
-Password: The password specified in the splunkPassword parameter.
-License
-This project is licensed under the MIT License.
+docker pull splunk/splunk:9.1.3-patch1
+docker run -d -p 8000:8000 -e SPLUNK_START_ARGS='--accept-license' -e SPLUNK_PASSWORD='<password>' splunk/splunk:9.1.3-patch1
+docker ps -a -f id=<container_id>
+localhost:8000
 ```
-## License
-
-Feel free to adjust the content based on your specific requirements and configurations for your Splunk deployment.
 
 
 ## Authors
 
 - [@SushilSanjayBhile](https://github.com/SushilSanjayBhile)
-
 
