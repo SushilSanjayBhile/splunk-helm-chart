@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: splunk
+  labels:
+    app: splunk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: splunk
+  template:
+    metadata:
+      labels:
+        app: splunk
+    spec:
+      containers:
+      - name: splunk
+        image: splunk/splunk:9.1.3-patch1
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SPLUNK_START_ARGS
+          value: "--accept-license"
+        - name: SPLUNK_PASSWORD
+          value: "Diamanti@111"
+        volumeMounts:
+        - name: all-data
+          mountPath: /opt/splunk/var/lib/splunk/
+        # # Add liveness probe
+        # livenessProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: 8000
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        # # Add readiness probe
+        # readinessProbe:
+        #   httpGet:
+        #     path: /readiness
+        #     port: 8000
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 5
+      initContainers:
+      - name: fix-all-permissions
+        image: docker.io/library/busybox:sushil
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "chmod -R 755 /opt/splunk/"]
+        volumeMounts:
+        - name: all-data
+          mountPath: /opt/splunk/var/lib/splunk/
+        securityContext:
+          privileged: true
+      volumes:
+      - name: all-data
+        emptyDir: {}
