@@ -29,23 +29,9 @@ spec:
         volumeMounts:
         - name: all-data
           mountPath: /opt/splunk/var/lib/splunk/
-        # # Add liveness probe
-        # livenessProbe:
-        #   httpGet:
-        #     path: /healthz
-        #     port: 8000
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 10
-        # # Add readiness probe
-        # readinessProbe:
-        #   httpGet:
-        #     path: /readiness
-        #     port: 8000
-        #   initialDelaySeconds: 20
-        #   periodSeconds: 5
       initContainers:
       - name: fix-all-permissions
-        image: docker.io/library/busybox:sushil
+        image: sushilmax93/busybox:splunk
         imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "chmod -R 755 /opt/splunk/"]
         volumeMounts:
